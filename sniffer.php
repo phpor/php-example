@@ -5,6 +5,7 @@
     Will run only on Linux
     Needs root privileges , so use sudo !!
 */
+// sniffer with C : http://www.binarytides.com/packet-sniffer-code-in-c-using-linux-sockets-bsd-part-2/
 
 error_reporting(~E_ALL);
 
