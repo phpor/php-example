@@ -8,8 +8,9 @@
 // 2. php 提供的raw socket只是允许ip层以上的自定义封包，ip层的封包是无法随意定义的，只能定义上层协议号信息，也因此我们并不需要关心ip层checksum的计算
 // 3. 虽然该脚本中不想知道ip源地址，只是tcp的checksum需要该信息，所以才允许传参的（否则自动发现eth0）
 // 4. 注意tcp checksum的算法
-// 5. 关于本地端口的选择，这里先bind了一下，避免和影响已有的连接（应该这个逻辑并非多此一举吧）
+// 5. 关于本地端口的选择，这里先bind了一下，避免和影响已有的连接（或许这个逻辑多此一举，因为bind一个已经被listen的端口也是能成功的，问题： bind究竟做了啥？）
 // 6. 原本意味收到远端的syn-ack之后需要发送一个rst，避免远端等待我的ack（猜测通过简单的close应该可以实现）； 测试发现，当本机收到远端响应的syn-ack之后，系统立即发送了一个rst包（不知道为什么）？？？？可能是我们的脚本哪里出了问题
+//    这里通过raw socket发送的虽然是一个tcp的数据包，实际上根本没有走本地tcp的协议栈，本地协议栈在不知道已经发送了SYN的时候，“意外”收到了一个syn-ack，所以，理所当然要响应一个rst了，通过该脚本，对于网络的认识也更进了一步
 
 define("TCP_FLAG_FIN", 0x01);
 define("TCP_FLAG_SYN", 0x02);
@@ -36,7 +37,7 @@ function synprobe($source_ip, $dst_ip, $port) {
 
 	while(true) {
 		$sport = select_sport();
-		$ret = socket_bind($socket, $source_ip, $port);
+		$ret = socket_bind($socket, $source_ip, $sport);
 		if($ret) break;
 	}
 	socket_connect($socket, $dst_ip, null);
