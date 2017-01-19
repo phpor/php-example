@@ -8,6 +8,7 @@
 // sniffer with C : http://www.binarytides.com/packet-sniffer-code-in-c-using-linux-sockets-bsd-part-2/
 // 一般来讲，抓包都适用libcap，但是，这里没有，直接使用raw socket实现，显得非常的帅气和麻烦
 // 这里显示了php也能轻松实现很底层的工作（尽管是借助了socket模块），让你体验一下sniffer的原理，sniffer并不高深，php也能实现，只是效率就不要指望了
+// 该脚本抓的是所有网卡的数据包，如果需要可以自行添加逻辑进行过滤
 
 error_reporting(~E_ALL);
 
