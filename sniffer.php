@@ -20,6 +20,7 @@
 // 结论:
 // 1. 你可以通过该脚本理解ip层之上的协议的拆包
 // 2. 该脚本只能是一个有限的sniffer
+// 3. 如果非要使用php来做sniffer的话，可以参考： http://marcelog.github.io/articles/swig_php_libpcap_module_c++.html 这是一个libpcap的php扩展
 
 error_reporting(~E_ALL);
 
