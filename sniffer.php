@@ -19,8 +19,9 @@
 // 2. 虽然socket_create的第三个参数是SOL_TCP，但是socket_recv返回的数据却是包含了ip层的信息的，那么该参数都起到了哪些作用呢？
 // 结论:
 // 1. 你可以通过该脚本理解ip层之上的协议的拆包
-// 2. 该脚本只能是一个有限的sniffer
-// 3. 如果非要使用php来做sniffer的话，可以参考： http://marcelog.github.io/articles/swig_php_libpcap_module_c++.html 这是一个libpcap的php扩展
+// 2. 该脚本只能是一个有限的sniffer，
+// 3. 如果非要使用php来做sniffer的话，可以参考： http://marcelog.github.io/articles/swig_php_libpcap_module_c++.html 
+// 这是一个libpcap的php扩展, 或者可以通过php分析tcpdump 生成的pcap 结果来实现： https://github.com/zobo/php-pcap
 
 error_reporting(~E_ALL);
 
