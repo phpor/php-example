@@ -1,12 +1,16 @@
 <?php
 
-function multi_cmd($arr) {
+function multi_cmd($arr, $context = []) {
+	$timeout = $context['timeout']?:null;
 	$arrResult = array();
 	$arrFp = array();
 	foreach($arr as  $k => $cmd) {
+		$arrResult[$k] = array(
+				"stdout" => null,
+				"meta"=>array("elapse"=>0, "timeout" => false),
+				);
 		$arrFp[$k] = popen($cmd, "r");
 		if(!$arrFp[$k]) {
-			$arrResult[$k] = array("stdout" => null, "meta"=>array("elapse"=>0));
 			unset($arrFp[$k]);
 			continue;
 		}
@@ -16,6 +20,18 @@ function multi_cmd($arr) {
 	$write = null;
 	$expect = null;
 	while(count($arrFp) > 0) {
+		if($timeout) {
+			$elapse = microtime(1) - $start;
+			if ($elapse > $timeout) {
+				foreach($arrFp as $k=>$fp) {
+					unset($arrFp[$k]);
+					$arrResult[$k]["meta"]["elapse"] = $elapse;
+					$arrResult[$k]["meta"]["timeout"] = true;
+				}
+
+				break;
+			}
+		}
 		$arrRead = array_values($arrFp);
 		$ret = stream_select($arrRead, $write, $expect, 0, 200000);
 		if($ret === false) break;
